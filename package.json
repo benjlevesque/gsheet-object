@@ -1,0 +1,39 @@
+{
+  "name": "google-sheet-objects",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "backpack",
+    "build": "backpack build",
+    "test": "jest"
+  },
+  "dependencies": {
+    "debug": "^4.1.1",
+    "dotenv": "^8.2.0",
+    "googleapis": "^45.0.0",
+    "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.7.0",
+    "@babel/preset-typescript": "^7.7.2",
+    "@types/debug": "^4.1.5",
+    "@types/jest": "^24.0.23",
+    "@types/lodash": "^4.14.146",
+    "@types/node": "^12.12.6",
+    "babel-loader": "^8.0.6",
+    "babel-polyfill": "^6.26.0",
+    "backpack-core": "^0.8.4",
+    "jest": "^24.9.0",
+    "typescript": "^3.7.2"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-typescript"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-class-properties"
+    ]
+  }
+}
