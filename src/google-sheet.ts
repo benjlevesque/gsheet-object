@@ -14,7 +14,7 @@ import {
 interface IGoogleSheetOptions {
   spreadsheetId: string;
   sheetName?: string;
-  auth: string | OAuth2Client;
+  auth?: string | OAuth2Client;
   range?: string;
   headerRange?: string;
 }
@@ -36,10 +36,7 @@ export class GoogleSheet<T> {
     const defaultOptions = {
       spreadsheetId: process.env.SPREADSHEET_ID || "",
       sheetName: process.env.SHEET_NAME,
-      auth:
-        process.env.GOOGLE_CREDENTIALS ||
-        process.env.GOOGLE_APPLICATION_CREDENTIALS ||
-        "",
+      auth: process.env.GOOGLE_CREDENTIALS,
     };
 
     this.options =
@@ -54,37 +51,35 @@ export class GoogleSheet<T> {
           };
 
     if (!this.options.spreadsheetId) throw new Error("Missing spreadsheetId");
-    if (!this.options.auth) throw new Error("Missing auth or credentials");
+    // if (!this.options.auth) throw new Error("Missing auth or credentials");
   }
 
   public async init() {
     this.logger("init sheets api");
 
-    if (typeof this.options.auth === "string") {
-      if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-        const auth = await google.auth.getClient({
-          scopes: [
-            "https://www.googleapis.com/auth/spreadsheets",
-            "https://www.googleapis.com/auth/devstorage.read_only",
-          ],
-        });
-        this.options.auth = auth;
-      } else {
-        const credentials = JSON.parse(this.options.auth);
-        if (!credentials.client_email && credentials.private_key) {
-          throw new Error(
-            "auth must be a valid JSON credentials containing client_email and private_key"
-          );
-        }
-        let jwt = new google.auth.JWT(
-          credentials.client_email,
-          undefined,
-          credentials.private_key,
-          ["https://www.googleapis.com/auth/spreadsheets"]
+    if (!this.options.auth) {
+      const auth = await google.auth.getClient({
+        scopes: [
+          "https://www.googleapis.com/auth/spreadsheets",
+          "https://www.googleapis.com/auth/devstorage.read_only",
+        ],
+      });
+      this.options.auth = auth;
+    } else if (typeof this.options.auth === "string") {
+      const credentials = JSON.parse(this.options.auth);
+      if (!credentials.client_email && credentials.private_key) {
+        throw new Error(
+          "auth must be a valid JSON credentials containing client_email and private_key"
         );
-        await jwt.authorize();
-        this.options.auth = jwt;
       }
+      let jwt = new google.auth.JWT(
+        credentials.client_email,
+        undefined,
+        credentials.private_key,
+        ["https://www.googleapis.com/auth/spreadsheets"]
+      );
+      await jwt.authorize();
+      this.options.auth = jwt;
     }
     this.sheetsApi = google.sheets({ version: "v4", auth: this.options.auth });
     const spreadsheet = await this.sheetsApi.spreadsheets.get({
