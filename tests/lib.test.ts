@@ -4,13 +4,15 @@ import {
   arrayToObject,
   rowToObject,
   sheetToArray,
-  sheetToObject
+  sheetToObject,
+  nameToColumn,
+  columnToName,
 } from "../src/lib";
 
 const gsheetData = [
   ["id", "FirstName", "Last name"],
   ["0", "Alice", "DOE"],
-  ["1", "Bob", "SMITH"]
+  ["1", "Bob", "SMITH"],
 ];
 
 describe("sheetToObject", () => {
@@ -22,14 +24,14 @@ describe("sheetToObject", () => {
         _row: 1,
         id: "0",
         firstName: "Alice",
-        lastName: "DOE"
+        lastName: "DOE",
       },
       Bob: {
         _row: 2,
         id: "1",
         firstName: "Bob",
-        lastName: "SMITH"
-      }
+        lastName: "SMITH",
+      },
     });
   });
 });
@@ -43,14 +45,14 @@ describe("sheetToArray", () => {
         _row: 1,
         id: "0",
         firstName: "Alice",
-        lastName: "DOE"
+        lastName: "DOE",
       },
       {
         _row: 2,
         id: "1",
         firstName: "Bob",
-        lastName: "SMITH"
-      }
+        lastName: "SMITH",
+      },
     ]);
   });
 });
@@ -61,7 +63,7 @@ describe("rowToObject", () => {
     expect(obj).toEqual({
       id: "0",
       firstName: "Alice",
-      lastName: "DOE"
+      lastName: "DOE",
     });
   });
 });
@@ -70,14 +72,14 @@ describe("arrayToObject", () => {
   it("should return an object with selected property as key", () => {
     const array = [
       { foo: "bar1", baz: 0 },
-      { foo: "bar2", baz: 1 }
+      { foo: "bar2", baz: 1 },
     ];
 
     const obj = arrayToObject(array, x => x.foo);
 
     expect(obj).toEqual({
       bar1: { foo: "bar1", baz: 0 },
-      bar2: { foo: "bar2", baz: 1 }
+      bar2: { foo: "bar2", baz: 1 },
     });
   });
 });
@@ -97,5 +99,21 @@ describe("letterToColumn", () => {
     expect(letterToColumn("A")).toBe(1);
     expect(letterToColumn("Z")).toBe(26);
     expect(letterToColumn("AA")).toBe(27);
+  });
+});
+
+describe("nameToColumn", () => {
+  it("should return the index equivalent of the column name", () => {
+    expect(nameToColumn(gsheetData[0], "id")).toBe(0);
+    expect(nameToColumn(gsheetData[0], "firstName")).toBe(1);
+    expect(nameToColumn(gsheetData[0], "lastName")).toBe(2);
+  });
+});
+
+describe("columnToName", () => {
+  it("should return the name equivalent of the column index", () => {
+    expect(columnToName(gsheetData[0], 0)).toBe("id");
+    expect(columnToName(gsheetData[0], 1)).toBe("firstName");
+    expect(columnToName(gsheetData[0], 2)).toBe("lastName");
   });
 });

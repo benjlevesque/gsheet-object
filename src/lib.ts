@@ -2,21 +2,17 @@ import camelCase from "lodash/camelCase";
 
 export type WithRow<T> = T & { _row: number };
 
-export interface Indexed<T> {
-  [key: string]: T;
-}
-
 export function sheetToObject<T, U = {}>(
   data: any[][],
   keySelector: (obj: T) => string,
   valueSelector?: (obj: T, index: number) => U
-): Indexed<T | U> {
+): Record<string, T | U> {
   const array = sheetToArray<T>(data);
   return arrayToObject<T, U>(array, keySelector, valueSelector);
 }
 
 // converts google sheet to a usable object array, where the header name is the field name
-export function sheetToArray<T>(data: any[][]): (WithRow<T>)[] {
+export function sheetToArray<T>(data: any[][]): WithRow<T>[] {
   return data.slice(1).reduce((acc, curr, index) => {
     const item = rowToObject<WithRow<T>>(curr, data[0]);
     item._row = index + 1;
@@ -37,15 +33,10 @@ export function arrayToObject<T, U = {}>(
   keySelector: (obj: T) => string,
   valueSelector?: (obj: T, index: number) => U
 ) {
-  return array.reduce(
-    (acc, curr, index) => {
-      acc[keySelector(curr)] = valueSelector
-        ? valueSelector(curr, index)
-        : curr;
-      return acc;
-    },
-    {} as Indexed<T | U>
-  );
+  return array.reduce((acc, curr, index) => {
+    acc[keySelector(curr)] = valueSelector ? valueSelector(curr, index) : curr;
+    return acc;
+  }, {} as Record<string, T | U>);
 }
 
 export function columnToLetter(column: number): string {
@@ -66,4 +57,11 @@ export function letterToColumn(letter: string): number {
     column += (letter.charCodeAt(i) - 64) * Math.pow(26, length - i - 1);
   }
   return column;
+}
+
+export function nameToColumn(headers: string[], name: string): number {
+  return headers.map(camelCase).indexOf(name);
+}
+export function columnToName(headers: string[], column: number): string {
+  return headers.map(camelCase)[column];
 }
