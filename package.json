@@ -1,8 +1,14 @@
 {
+  "name": "gsheet-object",
+  "author": "Benjamin LEVESQUE",
   "version": "0.1.3",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjlevesque/gsheet-object.git"
+  },
   "files": [
     "dist"
   ],
@@ -31,8 +37,6 @@
     "singleQuote": false,
     "trailingComma": "es5"
   },
-  "name": "gsheet-object",
-  "author": "Benjamin LEVESQUE",
   "module": "dist/gsheet-object.esm.js",
   "devDependencies": {
     "@types/debug": "^4.1.5",

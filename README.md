@@ -1,9 +1,9 @@
-# gsheets-object
+# gsheet-object
 
 ## Install
 
 ```
-yarn add gsheets-object
+yarn add gsheet-object
 ```
 
 ## Usage
