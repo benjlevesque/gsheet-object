@@ -3,7 +3,7 @@
 ## Install
 
 ```
-yarn add gsheet-object
+yarn add gsheet-object googleapis
 ```
 
 ## Usage
