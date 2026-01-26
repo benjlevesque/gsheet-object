@@ -23,7 +23,7 @@
     "debug": "^4.3.4",
     "dotenv": "^16.4.5",
     "lodash": "^4.17.21",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.23"
   },
   "peerDependencies": {
     "googleapis": ">=45.0.0"
